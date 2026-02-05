@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Thumbs Up Or Thumbs Down Detector</title>
 </head>
 <body>
+
+    <h1> Thumbs Up or Down? </h1>
+    <p>👍 Show your thumb to see if you have bad day or good day 👎</p>
     <div>Teachable Machine Image Model</div>
-    <button type="button" onclick="init()">Start</button>
+
+    <button type="button" onclick="init()">Start Webcam</button>
     <div id="webcam-container"></div>
     <div id="label-container"></div>
+    <div id="message"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    
     <script type="text/javascript">
         // More API functions here:
         // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
@@ -59,10 +66,24 @@
             // predict can take in an image, video or canvas html element
             const prediction = await model.predict(webcam.canvas);
             for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                
+                const classPrediction =
+                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
                 labelContainer.childNodes[i].innerHTML = classPrediction;
+
+                if (prediction[i].className === "Thumbs Up" && prediction[i].probability > 0.75) {
+                    document.getElementById("message").innerText ="☀️ You are having good day! ☀️";
+                }
+
+                if (prediction[i].className === "Thumbs Down" && prediction[i].probability > 0.75) {
+                    document.getElementById("message").innerText ="🌧️ You are having bad day! 🌧️";
+                }
+            
             }
+
+
+
+
         }
     </script>
 
